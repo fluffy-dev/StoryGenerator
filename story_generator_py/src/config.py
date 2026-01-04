@@ -8,9 +8,9 @@ class Settings(BaseSettings):
     """Global application settings."""
 
     # App Config
-    APP_TITLE: str = "Story Generator API"
-    APP_VERSION: str = "1.0.0"
-    DEBUG: bool = False
+    APP_TITLE: str = Field("Story Generator")
+    APP_VERSION: str = Field("1.0.0")
+    DEBUG: bool = Field(False)
 
     # OpenAI Config
     OPENAI_API_KEY: str = Field(..., description="API Key for OpenAI")
@@ -24,8 +24,5 @@ class Settings(BaseSettings):
     CORS_ALLOW_METHODS: List[str] = ["*"]
     CORS_ALLOW_HEADERS: List[str] = ["*"]
 
-    model_config = SettingsConfigDict(
-        env_file=".env",
-        env_file_encoding="utf-8",
-        extra="ignore"
-    )
+
+settings = Settings()

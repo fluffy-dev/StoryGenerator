@@ -5,7 +5,7 @@ from fastapi.responses import StreamingResponse
 
 from src.story.schemas import StoryRequest
 from src.story.service import StoryService
-from src.dependencies import get_story_service
+from src.story.dependencies import IStoryService
 
 router = APIRouter(prefix="/story", tags=["Story Generator"])
 
@@ -18,7 +18,7 @@ router = APIRouter(prefix="/story", tags=["Story Generator"])
 )
 async def generate_story(
     request: StoryRequest,
-    service: Annotated[StoryService, Depends(get_story_service)]
+    service: IStoryService
 ) -> StreamingResponse:
     """Endpoint to generate a story.
 

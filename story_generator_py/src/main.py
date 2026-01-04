@@ -3,7 +3,7 @@ import logging
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
-from src.config import Settings as project_settings
+from src.config import settings
 from src.story.router import router as story_router
 
 # Configure logging
@@ -21,20 +21,20 @@ def create_app() -> FastAPI:
     """
 
     app = FastAPI(
-        title=project_settings.APP_TITLE,
-        version=project_settings.APP_VERSION,
-        docs_url="/docs" if project_settings.DEBUG else None,
-        redoc_url="/redoc" if project_settings.DEBUG else None,
-        openapi_url="/openapi.json" if project_settings.DEBUG else None,
+        title=settings.APP_TITLE,
+        version=settings.APP_VERSION,
+        docs_url="/docs" if settings.DEBUG else None,
+        redoc_url="/redoc" if settings.DEBUG else None,
+        openapi_url="/openapi.json" if settings.DEBUG else None,
     )
 
     # Configure CORS
     app.add_middleware(
         CORSMiddleware,
-        allow_origins=project_settings.CORS_ORIGINS,
-        allow_credentials=project_settings.CORS_ALLOW_CREDENTIALS,
-        allow_methods=project_settings.CORS_ALLOW_METHODS,
-        allow_headers=project_settings.CORS_ALLOW_HEADERS,
+        allow_origins=settings.CORS_ORIGINS,
+        allow_credentials=settings.CORS_ALLOW_CREDENTIALS,
+        allow_methods=settings.CORS_ALLOW_METHODS,
+        allow_headers=settings.CORS_ALLOW_HEADERS,
     )
 
     # Include Routers

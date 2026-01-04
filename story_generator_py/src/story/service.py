@@ -5,7 +5,7 @@ from typing import AsyncGenerator
 from openai import AsyncOpenAI, APIError, APIConnectionError, RateLimitError
 from fastapi import HTTPException, status
 
-from src.config import Settings
+from src.config import settings
 from src.story.schemas import StoryRequest
 
 logger = logging.getLogger(__name__)
@@ -17,8 +17,8 @@ class StoryService:
     def __init__(self):
         """Initializes the service with configuration settings.
         """
-        self._settings = Settings
-        self._client = AsyncOpenAI(api_key=Settings.OPENAI_API_KEY)
+        self._settings = settings
+        self._client = AsyncOpenAI(api_key=self._settings.OPENAI_API_KEY)
 
     def _construct_prompt(self, request: StoryRequest) -> str:
         """Constructs the system prompt for the LLM.
