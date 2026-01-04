@@ -1,0 +1,49 @@
+services:
+  python-api:
+    build: ./story_generator_py
+    container_name: story_gen_python
+    ports:
+      - "8000:8000"
+    networks:
+      - app-network
+    env_file:
+      - .env
+    volumes:
+      - ./src:/app/src
+    restart: unless-stopped
+    healthcheck:
+      test: [ "CMD", "curl", "-f", "http://localhost:8000/docs" ]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  php-frontend:
+    image: yiisoftware/yii2-php:8.4-apache
+    container_name: story_gen_php
+    volumes:
+      - ./yii2-app:/app
+    ports:
+      - "8080:80"
+    depends_on:
+      - db
+      - python-api
+    environment:
+      - PYTHON_API_URL=http://python-api:8000
+    networks:
+      - app-network
+
+  db:
+    image: postgres:16-alpine
+    container_name: story_gen_db
+    environment:
+      POSTGRES_DB: yii2db
+      POSTGRES_USER: yii2user
+      POSTGRES_PASSWORD: yii2password
+    ports:
+      - "5432:5432"
+    networks:
+      - app-network
+
+networks:
+  app-network:
+    driver: bridge
