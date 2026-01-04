@@ -20,13 +20,17 @@ services:
     container_name: story_gen_php
     volumes:
       - ./yii2-app:/app
+      - ./yii2-app/docker-entrypoint.sh:/usr/local/bin/docker-entrypoint.sh
     ports:
       - "8080:80"
     depends_on:
-      - db
-      - python-api
+      db:
+        condition: service_healthy
+      python-api:
+        condition: service_started
     environment:
       - PYTHON_API_URL=http://python-api:8000
+    entrypoint: [ "sh", "/usr/local/bin/docker-entrypoint.sh" ]
     networks:
       - app-network
 
@@ -37,6 +41,11 @@ services:
       POSTGRES_DB: yii2db
       POSTGRES_USER: yii2user
       POSTGRES_PASSWORD: yii2password
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U yii2user -d yii2db" ]
+      interval: 5s
+      timeout: 5s
+      retries: 5
     ports:
       - "5432:5432"
     networks:
