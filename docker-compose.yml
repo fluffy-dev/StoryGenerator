@@ -28,8 +28,8 @@ services:
         condition: service_healthy
       python-api:
         condition: service_started
-    environment:
-      - PYTHON_API_URL=http://python-api:8000
+    env_file:
+      - .env
     entrypoint: [ "sh", "/usr/local/bin/docker-entrypoint.sh" ]
     networks:
       - app-network
@@ -37,10 +37,8 @@ services:
   db:
     image: postgres:16-alpine
     container_name: story_gen_db
-    environment:
-      POSTGRES_DB: yii2db
-      POSTGRES_USER: yii2user
-      POSTGRES_PASSWORD: yii2password
+    env_file:
+      - .env
     healthcheck:
       test: [ "CMD-SHELL", "pg_isready -U yii2user -d yii2db" ]
       interval: 5s
