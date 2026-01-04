@@ -9,7 +9,10 @@ use yii\base\Model;
  */
 class GenerateStoryForm extends Model
 {
-    public $age;
+    /**
+     * @var int Default age is 7
+     */
+    public $age = 7;
     public $language;
     public $characters;
 
@@ -19,11 +22,31 @@ class GenerateStoryForm extends Model
     public function rules()
     {
         return [
-            [['age', 'language', 'characters'], 'required'],
-            ['age', 'integer', 'min' => 1, 'max' => 16],
+            [['age', 'language'], 'required'],
+            ['age', 'integer', 'min' => 1, 'max' => 16], // Limits defined here
             ['language', 'in', 'range' => ['ru', 'kk']],
-            ['characters', 'each', 'rule' => ['string', 'min' => 2]],
-            // Ensure at least one character is selected/entered (logic handled in view mostly)
+
+            ['characters', 'filter', 'filter' => function ($value) {
+                return is_array($value) ? array_values(array_filter($value, 'trim')) : [];
+            }],
+
+            ['characters', 'required', 'message' => 'Необходимо указать минимум одного персонажа.'],
+
+            ['characters', function ($attribute, $params) {
+                if (!is_array($this->$attribute)) {
+                    $this->addError($attribute, 'Персонажи должны быть списком.');
+                    return;
+                }
+                $count = count($this->$attribute);
+                if ($count < 1) {
+                    $this->addError($attribute, 'Необходимо указать минимум одного персонажа.');
+                }
+                if ($count > 10) {
+                    $this->addError($attribute, 'Максимум 10 персонажей.');
+                }
+            }],
+
+            ['characters', 'each', 'rule' => ['string', 'min' => 2, 'max' => 50]],
         ];
     }
 

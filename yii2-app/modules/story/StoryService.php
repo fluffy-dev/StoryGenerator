@@ -7,9 +7,6 @@ use GuzzleHttp\Exception\RequestException;
 use yii\base\Component;
 use yii\helpers\Json;
 
-/**
- * Service to interact with external Python AI API.
- */
 class StoryService extends Component
 {
     private $client;

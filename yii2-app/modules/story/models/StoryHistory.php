@@ -32,7 +32,7 @@ class StoryHistory extends ActiveRecord
         return [
             [['age', 'language', 'characters', 'content'], 'required'],
             [['age'], 'integer'],
-            [['characters'], 'safe'], // JSON stored as array via Yii2 logic usually needs handling, simple safe here
+            [['characters'], 'safe'],
             [['content'], 'string'],
             [['language'], 'string', 'max' => 10],
         ];
